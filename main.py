@@ -2,7 +2,6 @@ from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 import random
 
-
 # ========================================
 # ゲームの準備
 # ========================================
@@ -14,7 +13,7 @@ app = Ursina()
 Text.default_font = "NotoSansJP-VariableFont_wght.ttf"
 
 # 毎回同じコースを生成する
-#random.seed(10)
+# random.seed(10)
 
 # 空
 Sky()
@@ -85,9 +84,7 @@ for i in range(platform_count):
     )
 
     # 後半ほど左右への変化を大きくする
-    maximum_x_distance = (
-        2.0 + difficulty * 2.0
-    )
+    maximum_x_distance = 2.0 + difficulty * 2.0
 
     x_distance = random.uniform(
         -maximum_x_distance,
@@ -98,10 +95,7 @@ for i in range(platform_count):
     if random.random() < 0.25:
         direction = random.choice([-1, 1])
 
-        x_distance = (
-            random.uniform(3.0, 4.5)
-            * direction
-        )
+        x_distance = random.uniform(3.0, 4.5) * direction
 
     # 基本的には上へ進む
     y_distance = random.uniform(
@@ -124,13 +118,9 @@ for i in range(platform_count):
         )
 
     # 後半ほど前後の隙間を広くする
-    minimum_gap = (
-        1.2 + difficulty * 0.3
-    )
+    minimum_gap = 1.2 + difficulty * 0.3
 
-    maximum_gap = (
-        2.0 + difficulty * 0.8
-    )
+    maximum_gap = 2.0 + difficulty * 0.8
 
     # 現在の難易度設定
     edge_gap = (
@@ -142,11 +132,7 @@ for i in range(platform_count):
     )
 
     # 足場が重ならないように中心間距離を計算
-    z_distance = (
-        previous_depth / 2
-        + edge_gap
-        + platform_depth / 2
-    )
+    z_distance = previous_depth / 2 + edge_gap + platform_depth / 2
 
     # 新しい足場の位置
     current_x += x_distance * 1.5
@@ -166,9 +152,7 @@ for i in range(platform_count):
     )
 
     # 10個目かどうか
-    is_checkpoint = (
-        platform_number == checkpoint_number
-    )
+    is_checkpoint = platform_number == checkpoint_number
 
     # 10個目は緑色で少し大きくする
     if is_checkpoint:
@@ -486,6 +470,7 @@ goal_quit_button = Button(
 # カウントダウン表示を変更する
 # ========================================
 
+
 def set_countdown_text(message):
     countdown_text.text = message
     countdown_text.enabled = True
@@ -494,6 +479,7 @@ def set_countdown_text(message):
 # ========================================
 # カウントダウン終了
 # ========================================
+
 
 def finish_countdown():
     global game_started
@@ -513,6 +499,7 @@ def finish_countdown():
 # ========================================
 # カウントダウン開始
 # ========================================
+
 
 def begin_countdown():
     global countdown_running
@@ -535,16 +522,12 @@ def begin_countdown():
     countdown_sequence = Sequence(
         Func(set_countdown_text, "3"),
         Wait(1),
-
         Func(set_countdown_text, "2"),
         Wait(1),
-
         Func(set_countdown_text, "1"),
         Wait(1),
-
         Func(set_countdown_text, "START!"),
         Wait(0.7),
-
         Func(finish_countdown),
     )
 
@@ -555,6 +538,7 @@ def begin_countdown():
 # チェックポイント通知を消す
 # ========================================
 
+
 def hide_checkpoint_message():
     checkpoint_message.enabled = False
 
@@ -562,6 +546,7 @@ def hide_checkpoint_message():
 # ========================================
 # チェックポイントを有効にする
 # ========================================
+
 
 def activate_checkpoint():
     global checkpoint_activated
@@ -573,10 +558,7 @@ def activate_checkpoint():
     checkpoint_activated = True
 
     # チェックポイントの上面
-    checkpoint_top = (
-        checkpoint_platform.y
-        + checkpoint_platform.scale_y / 2
-    )
+    checkpoint_top = checkpoint_platform.y + checkpoint_platform.scale_y / 2
 
     # 落下後の復活地点を設定
     respawn_position = Vec3(
@@ -585,9 +567,7 @@ def activate_checkpoint():
         checkpoint_platform.z,
     )
 
-    checkpoint_status_text.text = (
-        "チェックポイント：通過済み"
-    )
+    checkpoint_status_text.text = "チェックポイント：通過済み"
 
     checkpoint_message.text = "CHECKPOINT 10!"
     checkpoint_message.enabled = True
@@ -602,43 +582,28 @@ def activate_checkpoint():
 # チェックポイント判定
 # ========================================
 
+
 def check_checkpoint():
 
     if checkpoint_activated:
         return
 
-    checkpoint_top = (
-        checkpoint_platform.y
-        + checkpoint_platform.scale_y / 2
-    )
+    checkpoint_top = checkpoint_platform.y + checkpoint_platform.scale_y / 2
 
-    inside_x = (
-        abs(player.x - checkpoint_platform.x)
-        <= checkpoint_platform.scale_x / 2
-    )
+    inside_x = abs(player.x - checkpoint_platform.x) <= checkpoint_platform.scale_x / 2
 
-    inside_z = (
-        abs(player.z - checkpoint_platform.z)
-        <= checkpoint_platform.scale_z / 2
-    )
+    inside_z = abs(player.z - checkpoint_platform.z) <= checkpoint_platform.scale_z / 2
 
-    on_checkpoint_height = (
-        checkpoint_top
-        <= player.y
-        <= checkpoint_top + 2.5
-    )
+    on_checkpoint_height = checkpoint_top <= player.y <= checkpoint_top + 2.5
 
-    if (
-        inside_x
-        and inside_z
-        and on_checkpoint_height
-    ):
+    if inside_x and inside_z and on_checkpoint_height:
         activate_checkpoint()
 
 
 # ========================================
 # 落下後に復活する
 # ========================================
+
 
 def finish_fall():
     global falling
@@ -658,6 +623,7 @@ def finish_fall():
 # 落下演出を始める
 # ========================================
 
+
 def start_fall():
     global fall_count
     global falling
@@ -669,14 +635,10 @@ def start_fall():
 
     fall_count += 1
 
-    fall_count_text.text = (
-        f"落下回数：{fall_count}"
-    )
+    fall_count_text.text = f"落下回数：{fall_count}"
 
     # プレイヤー操作を止める
     player.enabled = False
-
-
 
     # 0.8秒後に復活
     invoke(
@@ -689,6 +651,7 @@ def start_fall():
 # ゴールしたとき
 # ========================================
 
+
 def reach_goal():
     global goal_reached
 
@@ -697,13 +660,9 @@ def reach_goal():
 
     goal_reached = True
 
-    clear_time_text.text = (
-        f"クリアタイム：{elapsed_time:.2f}秒"
-    )
+    clear_time_text.text = f"クリアタイム：{elapsed_time:.2f}秒"
 
-    result_fall_text.text = (
-        f"落下回数：{fall_count}回"
-    )
+    result_fall_text.text = f"落下回数：{fall_count}回"
 
     goal_overlay.enabled = True
     goal_panel.enabled = True
@@ -717,6 +676,7 @@ def reach_goal():
 # ========================================
 # もう一度遊ぶ
 # ========================================
+
 
 def retry_game():
     global elapsed_time
@@ -746,9 +706,7 @@ def retry_game():
     timer_text.text = "TIME：0.00秒"
     fall_count_text.text = "落下回数：0"
 
-    checkpoint_status_text.text = (
-        "チェックポイント：未通過"
-    )
+    checkpoint_status_text.text = "チェックポイント：未通過"
 
     checkpoint_message.enabled = False
     countdown_text.enabled = False
@@ -779,6 +737,7 @@ def retry_game():
 # ポーズ画面を開く
 # ========================================
 
+
 def open_pause():
     global paused
 
@@ -796,6 +755,7 @@ def open_pause():
 # ========================================
 # ポーズ画面を閉じる
 # ========================================
+
 
 def close_pause():
     global paused
@@ -816,40 +776,25 @@ def close_pause():
 # ゴール判定
 # ========================================
 
+
 def check_goal():
 
-    goal_top = (
-        goal_platform.y
-        + goal_platform.scale_y / 2
-    )
+    goal_top = goal_platform.y + goal_platform.scale_y / 2
 
-    inside_goal_x = (
-        abs(player.x - goal_platform.x)
-        <= goal_platform.scale_x / 2
-    )
+    inside_goal_x = abs(player.x - goal_platform.x) <= goal_platform.scale_x / 2
 
-    inside_goal_z = (
-        abs(player.z - goal_platform.z)
-        <= goal_platform.scale_z / 2
-    )
+    inside_goal_z = abs(player.z - goal_platform.z) <= goal_platform.scale_z / 2
 
-    on_goal_height = (
-        goal_top
-        <= player.y
-        <= goal_top + 2.5
-    )
+    on_goal_height = goal_top <= player.y <= goal_top + 2.5
 
-    if (
-        inside_goal_x
-        and inside_goal_z
-        and on_goal_height
-    ):
+    if inside_goal_x and inside_goal_z and on_goal_height:
         reach_goal()
 
 
 # ========================================
 # 毎フレーム行う処理
 # ========================================
+
 
 def update():
     global elapsed_time
@@ -865,9 +810,7 @@ def update():
     # タイマーを進める
     elapsed_time += time.dt
 
-    timer_text.text = (
-        f"TIME：{elapsed_time:.2f}秒"
-    )
+    timer_text.text = f"TIME：{elapsed_time:.2f}秒"
 
     # Shiftキーでダッシュ
     if held_keys["shift"]:
@@ -890,6 +833,7 @@ def update():
 # ========================================
 # キー入力
 # ========================================
+
 
 def input(key):
 
@@ -938,3 +882,4 @@ mouse.visible = True
 # ========================================
 
 app.run()
+a
